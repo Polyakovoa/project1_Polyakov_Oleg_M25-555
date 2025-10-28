@@ -127,8 +127,18 @@ def solve_puzzle(game_state):
     
     user_answer = input("Ваш ответ: ").strip().lower()
 
-    correct_answers_lower = [ans.lower() for ans in correct_answers]
+    correct_answers_processed = []
+    for ans in correct_answers:
+        if isinstance(ans, list) or len(ans) == 1:  # Если ответ состоит из отдельных букв
+            correct_answers_processed.append(''.join(correct_answers).lower())
+        else:
+            correct_answers_processed.append(ans.lower())
     
+    correct_answers_lower = [ans.lower() for ans in correct_answers_processed]
+    
+    #print(f"DEBUG: Правильные ответы: {correct_answers_lower}")  # Отладочная информация
+    #print(f"DEBUG: Ваш ответ: '{user_answer}'")  # Отладочная информация
+
     if user_answer in correct_answers_lower:
         print("Правильно! Загадка решена.")
         
@@ -176,7 +186,7 @@ def attempt_open_treasure(game_state):
     
     if answer == 'да':
         code = input("Введите код: ").strip()
-        if room_data['puzzle'] and code == room_data['puzzle'][1]:
+        if room_data['puzzle'] and code in room_data['puzzle'][1]:
             print("Замок щёлкает! Сундук открыт!")
             if 'treasure_chest' in room_data['items']:
                 room_data['items'].remove('treasure_chest')
