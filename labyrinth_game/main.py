@@ -1,6 +1,6 @@
 ﻿from labyrinth_game.constants import ROOMS
-from labyrinth_game.utils import describe_current_room
-from labyrinth_game.player_actions import get_input, move_player, take_item
+from labyrinth_game.utils import describe_current_room, attempt_open_treasure
+from labyrinth_game.player_actions import get_input, move_player, take_item, use_item, show_inventory
 
 # Define game state
 game_state = {
@@ -9,21 +9,6 @@ game_state = {
     'game_over': False,  # Значения окончания игры
     'steps_taken': 0  # Количество шагов
 }
-
-
-def main():
-    """Main function для старта игры."""
-    
-    print("Добро пожаловать в Лабиринт сокровищ!")
-    
-    describe_current_room(game_state)
-    
-    while not game_state['game_over']:
-        command = input("\nВведите команду: ").strip().lower()
-        print(f"Вы ввели: {command}")
-
-if __name__ == "__main__":
-    main()
 
 def process_command(game_state, command):
     """
@@ -51,10 +36,40 @@ def process_command(game_state, command):
                 take_item(game_state, argument)
             else:
                 print("Укажите предмет: take [предмет]")
+        case 'use':
+            if argument:
+                use_item(game_state, argument)
+            else:
+                print("Укажите предмет: use [предмет]")
         case 'inventory':
-            print(f"Инвентарь: {game_state['player_inventory']}")
+            show_inventory(game_state)
+        case 'solve':
+            if game_state['current_room'] == 'treasure_room':
+                attempt_open_treasure(game_state)
+            else:
+                from labyrinth_game.utils import solve_puzzle
+                solve_puzzle(game_state)
+        case 'help' | 'помощь':
+            from labyrinth_game.utils import show_help
+            show_help()
         case 'quit' | 'exit':
             game_state['game_over'] = True
             print("Спасибо за игру!")
         case _:
-            print("Неизвестная команда. Попробуйте: look, go [направление], take [предмет], inventory, quit")
+            print("Неизвестная команда. Попробуйте: look, go [направление], "
+                  "take [предмет], use [предмет], inventory, solve, quit")
+
+def main():
+    """Main function для старта игры."""
+    
+    print("Добро пожаловать в Лабиринт сокровищ!")
+    
+    describe_current_room(game_state)
+    
+    while not game_state['game_over']:
+        command = get_input("\nВведите команду: ").strip().lower()
+        process_command(game_state, command)
+
+
+if __name__ == "__main__":
+    main()

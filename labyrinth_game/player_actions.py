@@ -1,6 +1,4 @@
 from labyrinth_game.constants import ROOMS
-from labyrinth_game.utils import describe_current_room
-
 
 def show_inventory(game_state):
     """
@@ -40,7 +38,26 @@ def move_player(game_state, direction):
     if direction in exits:
         game_state['current_room'] = exits[direction]
         game_state['steps_taken'] += 1
-        describe_current_room(game_state)
+        new_room = game_state['current_room']
+        new_room_data = ROOMS[new_room]
+        
+        print(f"== {new_room.upper()} ==")
+        print(new_room_data['description'])
+        
+        if new_room_data['items']:
+            print("\nЗаметные предметы:")
+            for item in new_room_data['items']:
+                print(f"  - {item}")
+        
+        new_exits = new_room_data['exits']
+        if new_exits:
+            print("\nВыходы:")
+            for exit_direction, exit_room in new_exits.items():
+                print(f"  - {exit_direction}: {exit_room}")
+        
+        if new_room_data['puzzle']:
+            print("\nКажется, здесь есть загадка (используйте команду solve).")
+            
     else:
         print("Нельзя пойти в этом направлении.")
 
@@ -54,6 +71,9 @@ def take_item(game_state, item_name):
     room_items = current_room_data.get('items', [])
     
     if item_name in room_items:
+        if item_name == 'treasure_chest':
+            print("Вы не можете поднять сундук, он слишком тяжелый.")
+            return
         game_state['player_inventory'].append(item_name)
         room_items.remove(item_name)
         print(f"Вы подняли: {item_name}")
@@ -80,6 +100,14 @@ def use_item(game_state, item_name):
             print("Вы открыли бронзовую шкатулку.")
             if 'rusty_key' not in inventory:
                 inventory.append('rusty_key')
-                print("Внутри Вы нашли rusty_key!")
+                print("Внутри Вы нашли ржавый rusty_key!")
+                print("(Этот ключ может пригодиться для открытия сокровищницы!)")
+        case 'rusty_key':
+            print("Осмотрев ржавый ключ Вы замечаете на нем символы сокровищницы!")
+            print("Это и есть ключ от сокровищницы!")
+        case 'leather_armor':
+            print("Вы получаете +10 к защите.")
+        case 'healing_herbs':
+            print("Вы получаете +10 к здоровью.")
         case _:
             print("Вы не знаете, как использовать этот предмет.")
