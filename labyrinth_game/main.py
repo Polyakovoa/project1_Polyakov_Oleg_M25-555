@@ -8,6 +8,7 @@ game_state = {
     'current_room': 'entrance',  # Текущая комната
     'game_over': False,  # Значения окончания игры
     'steps_taken': 0  # Количество шагов
+    'score': 0  # Добавляем счетчик очков
 }
 
 def process_command(game_state, command):
@@ -22,6 +23,11 @@ def process_command(game_state, command):
     
     action = parts[0]
     argument = parts[1] if len(parts) > 1 else None
+
+    directions = ['north', 'south', 'east', 'west', 'север', 'юг', 'восток', 'запад']
+    if action in directions:
+        move_player(game_state, action)
+        return
     
     match action:
         case 'look':
