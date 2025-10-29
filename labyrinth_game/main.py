@@ -73,8 +73,14 @@ def main():
     describe_current_room(game_state)
     
     while not game_state['game_over']:
-        command = input("\nВведите команду: ").strip().lower()
-        process_command(game_state, command)
+        try:
+            command = input("\nВведите команду: ").strip().lower()
+            process_command(game_state, command)
+        except UnicodeDecodeError:
+            print("Ошибка кодировки. Попробуйте еще раз.")
+        except (KeyboardInterrupt, EOFError):
+            print("\nВыход из игры.")
+            break
 
 
 if __name__ == "__main__":
