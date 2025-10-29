@@ -73,7 +73,7 @@ def main():
     describe_current_room(game_state)
     
     while not game_state['game_over']:
-        command = get_input("\nВведите команду: ").strip().lower()
+        command = input("\nВведите команду: ").strip().lower()
         process_command(game_state, command)
 
 
