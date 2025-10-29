@@ -1,6 +1,10 @@
-﻿from labyrinth_game.constants import ROOMS
-from labyrinth_game.utils import describe_current_room, attempt_open_treasure
-from labyrinth_game.player_actions import get_input, move_player, take_item, use_item, show_inventory
+﻿from labyrinth_game.player_actions import (
+    move_player,
+    show_inventory,
+    take_item,
+    use_item,
+)
+from labyrinth_game.utils import attempt_open_treasure, describe_current_room
 
 # Define game state
 game_state = {

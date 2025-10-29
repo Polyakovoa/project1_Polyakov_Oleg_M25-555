@@ -1,5 +1,6 @@
-from labyrinth_game.constants import ROOMS, COMMANDS
 import math
+from labyrinth_game.constants import COMMANDS, ROOMS
+
 
 def pseudo_random(seed, modulo):
     """
@@ -129,16 +130,13 @@ def solve_puzzle(game_state):
 
     correct_answers_processed = []
     for ans in correct_answers:
-        if isinstance(ans, list) or len(ans) == 1:  # Если ответ состоит из отдельных букв
+        if isinstance(ans, list) or len(ans) == 1:  
             correct_answers_processed.append(''.join(correct_answers).lower())
         else:
             correct_answers_processed.append(ans.lower())
     
     correct_answers_lower = [ans.lower() for ans in correct_answers_processed]
     
-    #print(f"DEBUG: Правильные ответы: {correct_answers_lower}")  # Отладочная информация
-    #print(f"DEBUG: Ваш ответ: '{user_answer}'")  # Отладочная информация
-
     if user_answer in correct_answers_lower:
         print("Правильно! Загадка решена.")
         
@@ -198,7 +196,6 @@ def attempt_open_treasure(game_state):
         print("Вы отступаете от сундука.")
 
 def show_help():
-    from labyrinth_game.constants import COMMANDS
     
     print("\nДоступные команды:")
     for command, description in COMMANDS.items():
